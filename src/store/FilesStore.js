@@ -14,6 +14,9 @@ const store = new Vuex.Store({
   getters: {
     getAll(state) {
       return state.files;
+    },
+    getByUuid(state) {
+      return id => state.files.filter(i => i.uuid === id)[0];
     }
   },
   mutations: {
@@ -27,7 +30,10 @@ const store = new Vuex.Store({
         type: file.type
       });
     },
-    clearAll(state) {
+    deleteByUuid(state, id) {
+      state.files = state.files.filter(i => i.uuid !== id);
+    },
+    deleteAll(state) {
       state.files = [];
     }
   },
@@ -35,8 +41,11 @@ const store = new Vuex.Store({
     addFile(state, file) {
       state.commit('addFile', file);
     },
-    clearAll(state) {
-      state.commit('clearAll');
+    deleteByUuid(state, id) {
+      state.commit('deleteByUuid', id);
+    },
+    deleteAll(state) {
+      state.commit('deleteAll');
     }
   },
   plugins: [createPersistedState()]

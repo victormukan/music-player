@@ -1,4 +1,4 @@
-# music_player
+# Music player
 
 > A Vue.js project for uploading music file and their listening
 
