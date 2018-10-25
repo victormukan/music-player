@@ -15,25 +15,28 @@ const store = new Vuex.Store({
     getAll(state) {
       return state.files;
     },
-    getByUuid(state) {
-      return id => state.files.filter(i => i.uuid === id)[0];
+    getById(state) {
+      return id => state.files.filter(i => i.id === id)[0];
     }
   },
   mutations: {
     addFile(state, file) {
-      const url = URL.createObjectURL(file);
+      const urlObject = URL.createObjectURL(file);
+
       state.files.push({
-        uuid: uuid(),
-        url,
+        id: uuid(),
         name: file.name,
         size: file.size,
-        type: file.type
+        type: file.type,
+        file: urlObject
       });
     },
-    deleteByUuid(state, id) {
-      state.files = state.files.filter(i => i.uuid !== id);
+    deleteById(state, id) {
+      URL.revokeObjectURL(state.files.filter(i => i.id === id)[0].file);
+      state.files = state.files.filter(i => i.id !== id);
     },
     deleteAll(state) {
+      state.files.forEach(i => URL.revokeObjectURL(i.file));
       state.files = [];
     }
   },
@@ -41,8 +44,8 @@ const store = new Vuex.Store({
     addFile(state, file) {
       state.commit('addFile', file);
     },
-    deleteByUuid(state, id) {
-      state.commit('deleteByUuid', id);
+    deleteById(state, id) {
+      state.commit('deleteById', id);
     },
     deleteAll(state) {
       state.commit('deleteAll');
@@ -52,3 +55,14 @@ const store = new Vuex.Store({
 });
 
 export default store;
+
+// function getAudioDuration(urlObject) {
+//   const audio = document.createElement('audio');
+//   audio.src = urlObject;
+
+//   return new Promise((resolve) => {
+//     audio.addEventListener('loadedmetadata', () => {
+//       resolve(audio.duration);
+//     });
+//   });
+// }

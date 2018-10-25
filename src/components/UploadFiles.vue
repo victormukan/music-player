@@ -1,37 +1,49 @@
 <template>
   <v-container>
     <v-flex xs12>
-      <files-list />
-      
-      <v-text-field 
-        label="Select Audio File" 
-        @click="pickFile" 
-        v-model="fileName" 
-        prepend-icon="attach_file" 
+      <v-data-table :headers="headers" :items="files" class="elevation-5">
+        <template slot="items" slot-scope="props">
+          <td>{{ props.item.name.split('.').slice(0,-1).join('.') }}</td>
+          <td>{{ (props.item.size /1024 /1024).toFixed(2) }} Mb</td>
+          <td>{{ props.item.type }}</td>
+          <td class="text-s-right">
+            <v-btn icon @click="deleteFile(props.item.id)">
+              <v-icon>delete</v-icon>
+            </v-btn>
+          </td>
+        </template>
+      </v-data-table>
+
+      <v-text-field
+        label="Select Audio File"
+        @click="pickFile"
+        v-model="fileName"
+        prepend-icon="attach_file"
         color="green accent-4"
         class="mt-3">
       </v-text-field>
-      
+
       <input type="file" @change="loadFile" accept=".mp3,audio/*" class="hidden" ref="fileInput">
 
     </v-flex>
   </v-container>
 </template>
 <script>
-import FilesList from '@/components/FilesList';
-
 export default {
   data() {
     return {
-      fileName: ''
+      fileName: '',
+      headers: [
+        { text: 'Name', sortable: false },
+        { text: 'Size (Mb)', sortable: false },
+        { text: 'Type', sortable: false },
+        { text: 'Delete', sortable: false }
+      ]
     };
   },
   methods: {
     pickFile() {
       this.$refs.fileInput.click();
-    },
-    getFiles() {
-      return this.$store.getters.getAll;
     },
     loadFile(e) {
       if (e.target.files[0]) {
@@ -39,17 +51,14 @@ export default {
         this.$store.dispatch('addFile', e.target.files[0]);
       }
     },
-    clearAll() {
-      this.$store.dispatch('deleteAll');
+    deleteFile(id) {
+      this.$store.dispatch('deleteById', id);
     }
   },
   computed: {
     files() {
       return this.$store.getters.getAll;
     }
-  },
-  components: {
-    'files-list': FilesList
   }
 };
 </script>
