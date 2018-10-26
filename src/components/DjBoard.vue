@@ -1,15 +1,8 @@
 <template>
-  <v-container fluid>
-    <v-layout row>
-      <v-flex lg6>
-        <music-mixer class="mx-4"/>
-      </v-flex>
-
-      <v-flex lg6>
-        <music-mixer class="mx-4"/>
-      </v-flex>
-    </v-layout>
-  </v-container>
+  <div class="flex-container">
+    <music-mixer class="half-size"/>
+    <music-mixer class="half-size"/>
+  </div>
 </template>
 <script>
 import MusicMixer from '@/components/MusicMixer';
@@ -20,3 +13,14 @@ export default {
   }
 };
 </script>
+<style scoped>
+.flex-container {
+  display: flex;
+  justify-content: space-around;
+}
+.half-size {
+  margin-top: 3%;
+  width: 45%;
+}
+</style>
+
