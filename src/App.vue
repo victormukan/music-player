@@ -1,7 +1,7 @@
 <template>
   <v-app id="app">
     <v-toolbar color="green accent-4">
-      <v-toolbar-title>Music player</v-toolbar-title>
+      <v-toolbar-title class="font-weight-black font-italic display-1">Music player</v-toolbar-title>
     </v-toolbar>
 
     <v-tabs color="green accent-4" grow show-arrows>
@@ -20,10 +20,4 @@ export default {
   name: 'App'
 };
 </script>
-<style scoped>
-.center {
-  display: flex;
-  float: center;
-}
-</style>
 
