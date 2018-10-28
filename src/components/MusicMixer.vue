@@ -4,105 +4,8 @@
       <span>{{playedItem.name}}</span>
       <audio :src="audioFile" controls ref="audio" class="my-3" @pause="getPlayStatus" @play="getPlayStatus"/>
     </v-layout>
-    <v-card>
-      <v-card-text class="flex-container">
-        <div class="control">
-          <v-subheader class="title">High shelf</v-subheader>
-          <v-slider
-            v-model="audioControls.highShelf.frequency.value"
-            :max="audioControlsRanges.highShelf.frequency.max"
-            :min="audioControlsRanges.highShelf.frequency.min"
-            :label="audioControlsRanges.highShelf.frequency.unit"
-            :step="1"
-            thumb-size="40"
-            thumb-label
-            color="green"
-          ></v-slider>
-          <v-slider
-            v-model="audioControls.highShelf.gain.value"
-            :max="audioControlsRanges.highShelf.gain.max"
-            :min="audioControlsRanges.highShelf.gain.min"
-            :label="audioControlsRanges.highShelf.gain.unit"
-            :step="1"
-            thumb-size="40"
-            thumb-label
-            color="green"
-          ></v-slider>
-        </div>
 
-        <div class="control">
-          <v-subheader class="title">Low shelf</v-subheader>
-          <v-slider
-            v-model="audioControls.lowShelf.frequency.value"
-            :max="audioControlsRanges.lowShelf.frequency.max"
-            :min="audioControlsRanges.lowShelf.frequency.min"
-            :label="audioControlsRanges.lowShelf.frequency.unit"
-            :step="1"
-            thumb-size="40"
-            thumb-label
-            color="green"
-          ></v-slider>
-          <v-slider
-            v-model="audioControls.lowShelf.gain.value"
-            :max="audioControlsRanges.lowShelf.gain.max"
-            :min="audioControlsRanges.lowShelf.gain.min"
-            :label="audioControlsRanges.lowShelf.gain.unit"
-            :step="1"
-            thumb-size="40"
-            thumb-label
-            color="green"
-          ></v-slider>
-        </div>
-
-        <div class="control">
-          <v-subheader class="title">High pass</v-subheader>
-          <v-slider
-            v-model="audioControls.highPass.frequency.value"
-            :max="audioControlsRanges.highPass.frequency.max"
-            :min="audioControlsRanges.highPass.frequency.min"
-            :label="audioControlsRanges.highPass.frequency.unit"
-            :step="1"
-            thumb-size="40"
-            thumb-label
-            color="green"
-          ></v-slider>
-          <v-slider
-            v-model="audioControls.highPass.Q.value"
-            :max="audioControlsRanges.highPass.Q.max"
-            :min="audioControlsRanges.highPass.Q.min"
-            :label="audioControlsRanges.highPass.Q.unit"
-            :step="0.1"
-            thumb-size="40"
-            thumb-label
-            color="green"
-          ></v-slider>
-        </div>
-
-        <div class="control">
-          <v-subheader class="title">Low pass</v-subheader>
-          <v-slider
-            v-model="audioControls.lowPass.frequency.value"
-            :max="audioControlsRanges.lowPass.frequency.max"
-            :min="audioControlsRanges.lowPass.frequency.min"
-            :label="audioControlsRanges.lowPass.frequency.unit"
-            :step="1"
-            thumb-size="40"
-            thumb-label
-            color="green"
-          ></v-slider>
-          <v-slider
-            v-model="audioControls.lowPass.Q.value"
-            :max="audioControlsRanges.lowPass.Q.max"
-            :min="audioControlsRanges.lowPass.Q.min"
-            :label="audioControlsRanges.lowPass.Q.unit"
-            :step="0.1"
-            thumb-size="40"
-            thumb-label
-            color="green"
-          ></v-slider>
-        </div>
-      </v-card-text>
-    </v-card>
+    <sound-controls ref="soundControls"/>
 
     <v-data-table :headers="headers" :items="files()" class="elevation-5">
       <template slot="items" slot-scope="props">
@@ -120,10 +23,9 @@
   </div>
 </template>
 <script>
-import SoundControls from '@/components/mixins/SoundControls';
+import SoundControls from '@/components/SoundControls';
 
 export default {
-  mixins: [SoundControls],
   data() {
     return {
       isPaused: true,
@@ -149,20 +51,19 @@ export default {
     },
     getPlayStatus() {
       this.isPaused = this.$refs.audio.paused;
+    },
+    init() {
+      this.audioFile = this.$store.getters.getAll[0].file;
+      this.playedItem = this.$store.getters.getAll[0];
+
+      this.$refs.soundControls.init(this.$refs.audio);
     }
   },
   mounted() {
     this.init();
+  },
+  components: {
+    'sound-controls': SoundControls
   }
 };
 </script>
-<style scoped>
-.flex-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-.control {
-  width: 45%;
-}
-</style>
