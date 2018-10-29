@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-layout align-center justify-center column>
-      <span>{{playedItem.name}}</span>
-      <audio :src="audioFile" controls ref="audio" class="my-3" @pause="getPlayStatus" @play="getPlayStatus"/>
+      <span class="subheading">{{ playedItem.name | separateFileExtension }}</span>
+      <audio :src="playedItem.file" controls ref="audio" class="my-3" @pause="getPlayStatus" @play="getPlayStatus"/>
     </v-layout>
 
     <sound-controls ref="soundControls"/>
@@ -17,7 +17,7 @@
               <v-icon>pause_circle_outline</v-icon>
             </v-btn>
           </td>
-          <td>{{ props.item.name.split('.').slice(0,-1).join('.') }}</td>
+          <td>{{ props.item.name | separateFileExtension }}</td>
       </template>
     </v-data-table>
   </div>
@@ -26,11 +26,13 @@
 import SoundControls from '@/components/SoundControls';
 
 export default {
+  components: {
+    'sound-controls': SoundControls
+  },
   data() {
     return {
       isPaused: true,
       playedItem: { name: '' },
-      audioFile: null,
       headers: [
         { text: 'Play', sortable: false },
         { text: 'Name', sortable: false }
@@ -43,7 +45,6 @@ export default {
     },
     play(item) {
       this.playedItem = item;
-      this.audioFile = item.file;
       setImmediate(() => this.$refs.audio.play());
     },
     pause() {
@@ -53,7 +54,6 @@ export default {
       this.isPaused = this.$refs.audio.paused;
     },
     init() {
-      this.audioFile = this.$store.getters.getAll[0].file;
       this.playedItem = this.$store.getters.getAll[0];
 
       this.$refs.soundControls.init(this.$refs.audio);
@@ -61,9 +61,6 @@ export default {
   },
   mounted() {
     this.init();
-  },
-  components: {
-    'sound-controls': SoundControls
   }
 };
 </script>

@@ -13,6 +13,9 @@ import router from './router/router';
 
 Vue.use(Vuetify);
 
+
+Vue.filter('separateFileExtension', val => val.split('.').slice(0, -1).join('.'));
+
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */

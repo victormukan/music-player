@@ -3,7 +3,7 @@
     <v-flex xs12>
       <v-data-table :headers="headers" :items="files" class="elevation-5">
         <template slot="items" slot-scope="props">
-          <td>{{ props.item.name.split('.').slice(0,-1).join('.') }}</td>
+          <td>{{ props.item.name |  separateFileExtension }}</td>
           <td>{{ (props.item.size /1024 /1024).toFixed(2) }} Mb</td>
           <td>{{ props.item.type }}</td>
           <td class="text-s-right">
